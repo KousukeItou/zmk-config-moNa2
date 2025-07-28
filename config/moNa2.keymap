@@ -51,7 +51,7 @@
 
         LeftClick {
             bindings = <&mkp LCLK>;
-            key-positions = <16 17>;
+            key-positions = <17 18>;
         };
 
         RightClick {
