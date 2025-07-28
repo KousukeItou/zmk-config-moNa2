@@ -46,7 +46,24 @@
 #define JP_UNDER LS(JP_BSLH)  // _
 
 / {
-    combos { compatible = "zmk,combos"; };
+    combos {
+        compatible = "zmk,combos";
+
+        LeftClick {
+            bindings = <&mkp LCLK>;
+            key-positions = <16 17>;
+        };
+
+        RightClick {
+            bindings = <&mkp RCLK>;
+            key-positions = <18 19>;
+        };
+
+        StickeyLayerToScroll {
+            bindings = <&sl 4>;
+            key-positions = <20 19>;
+        };
+    };
 
     keymap {
         compatible = "zmk,keymap";
