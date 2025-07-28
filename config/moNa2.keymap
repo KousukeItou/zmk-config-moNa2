@@ -70,7 +70,6 @@
         StickeyLayerToScroll {
             bindings = <&sl 4>;
             key-positions = <20 19>;
-            layers = <4>;
             timeout-ms = <0>;
         };
     };
