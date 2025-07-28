@@ -53,12 +53,12 @@
         compatible = "zmk,combos";
 
         LClick {
-            bindings = <&LClickC>;
+            bindings = <&mkp LCLK>, <&to 0>;
             key-positions = <17 18>;
         };
 
         RClick {
-            bindings = <&RClickC>;
+            bindings = <&mkp RCLK>, <&to 0>;
             key-positions = <18 19>;
         };
 
