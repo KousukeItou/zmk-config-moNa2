@@ -1,7 +1,6 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
-#include <input/processors.dtsi>
 #undef ZMK_POINTING_DEFAULT_SCRL_VAL
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 100
 #define JP_ZKHK GRAVE
@@ -45,16 +44,18 @@
 #define JP_UNDER LS(JP_BSLH)
 
 / {
+    /* ───────── スクロール用 Behavior 追加 ───────── */
     behaviors {
-        scroll_wheel: scroll_wheel {
+        scroll_up_down: scroll_up_down {
             compatible = "zmk,behavior-sensor-rotate";
-            label = "SCROLL_WHEEL";
+            label = "SCROLL_UP_DOWN";
             #sensor-binding-cells = <0>;
             bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
             tap-ms = <20>;
         };
     };
 
+    /* ───────── コンボ ───────── */
     combos {
         compatible = "zmk,combos";
 
@@ -75,6 +76,7 @@
         };
     };
 
+    /* ───────── キーマップ ───────── */
     keymap {
         compatible = "zmk,keymap";
 
@@ -121,12 +123,14 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
             >;
-            sensor-bindings = <&scroll_up_down>;
 
+            /* ← ここでトラックボール動作をスクロールにマッピング */
+            sensor-bindings = <&scroll_up_down>;
         };
     };
 };
 
+/* Sticky‑Layer の解除は「次のキー送出直後」 */
 &sl {
     release-after-ms = <0>;
 };
