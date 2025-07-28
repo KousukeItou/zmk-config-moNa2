@@ -107,6 +107,7 @@
         };
 
         SCROLL {
+            sensor-bindings = <&scroll_wheel>;
             bindings = <
 &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans  &trans
