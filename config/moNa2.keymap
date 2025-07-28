@@ -1,8 +1,11 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
+#include <input/processors.dtsi>
+
 #undef ZMK_POINTING_DEFAULT_SCRL_VAL
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 100
+
 #define JP_ZKHK GRAVE
 #define JP_MINUS MINUS
 #define JP_CARET EQUAL
@@ -44,18 +47,7 @@
 #define JP_UNDER LS(JP_BSLH)
 
 / {
-    /* ───────── スクロール用 Behavior 追加 ───────── */
-    behaviors {
-        scroll_up_down: scroll_up_down {
-            compatible = "zmk,behavior-sensor-rotate";
-            label = "SCROLL_UP_DOWN";
-            #sensor-binding-cells = <0>;
-            bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
-            tap-ms = <20>;
-        };
-    };
-
-    /* ───────── コンボ ───────── */
+    /* ────────── コンボ ────────── */
     combos {
         compatible = "zmk,combos";
 
@@ -70,13 +62,27 @@
         };
 
         StickeyLayerToScroll {
-            bindings = <&sl 4>;
-            key-positions = <19 20>;
-            timeout-ms = <50>;
+            bindings = <&sl 4>;       /* SCROLL レイヤ = 4 */
+            key-positions = <19 20>;  /* 必ず昇順 */
+            timeout-ms = <50>;        /* コンボ判定締切 */
         };
     };
 
-    /* ───────── キーマップ ───────── */
+    /* ────────── XY→Scroll 変換リスナー ────────── */
+    input_listeners {
+        scroll_mapper: scroll_mapper {
+            compatible = "zmk,input-listener";
+            /* ↓ご使用のトラックボールのノードラベルに書き換えてください */
+            device = <&pmw3610>;
+
+            scroller {
+                layers = <4>;                      /* SCROLL レイヤでのみ有効 */
+                input-processors = <&zip_xy_to_scroll_mapper>;
+            };
+        };
+    };
+
+    /* ────────── キーマップ ────────── */
     keymap {
         compatible = "zmk,keymap";
 
@@ -123,14 +129,11 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
             >;
-
-            /* ← ここでトラックボール動作をスクロールにマッピング */
-            sensor-bindings = <&scroll_up_down>;
         };
     };
 };
 
-/* Sticky‑Layer の解除は「次のキー送出直後」 */
+/* Sticky‑Layer: 次のキー送出後に即デフォルトへ戻る */
 &sl {
     release-after-ms = <0>;
 };
