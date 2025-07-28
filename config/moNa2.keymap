@@ -6,6 +6,7 @@
 #undef ZMK_POINTING_DEFAULT_SCRL_VAL
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 100
 
+/* ---------- 日本語配列用キー定義 ---------- */
 #define JP_ZKHK GRAVE
 #define JP_MINUS MINUS
 #define JP_CARET EQUAL
@@ -47,36 +48,25 @@
 #define JP_UNDER LS(JP_BSLH)
 
 / {
-    /* ────────── コンボ ────────── */
+    /* ────────── コンボ定義 ────────── */
     combos {
         compatible = "zmk,combos";
 
-        LeftClick {
-            bindings = <&mkp LCLK>;
-            key-positions = <17 18>;
-        };
-
-        RightClick {
-            bindings = <&mkp RCLK>;
-            key-positions = <18 19>;
-        };
-
         StickeyLayerToScroll {
-            bindings = <&sl 4>;       /* SCROLL レイヤ = 4 */
+            bindings = <&sl 4>;       /* レイヤ 4 (SCROLL) へ one‑shot */
             key-positions = <19 20>;  /* 必ず昇順 */
-            timeout-ms = <50>;        /* コンボ判定締切 */
+            timeout-ms = <50>;        /* 50 ms 内に同時押しで成立 */
         };
     };
 
-    /* ────────── XY→Scroll 変換リスナー ────────── */
+    /* ────────── トラックボール XY→スクロール変換 ────────── */
     input_listeners {
         scroll_mapper: scroll_mapper {
             compatible = "zmk,input-listener";
-            /* ↓ご使用のトラックボールのノードラベルに書き換えてください */
-            device = <&pmw3610>;
+            device = <&trackball>;                  /* ← シールド側ラベルに合わせる */
 
             scroller {
-                layers = <4>;                      /* SCROLL レイヤでのみ有効 */
+                layers = <4>;                       /* SCROLL レイヤ限定 */
                 input-processors = <&zip_xy_to_scroll_mapper>;
             };
         };
@@ -133,7 +123,7 @@
     };
 };
 
-/* Sticky‑Layer: 次のキー送出後に即デフォルトへ戻る */
+/* Sticky‑Layer: 次のキー送出後に即解除 */
 &sl {
     release-after-ms = <0>;
 };
