@@ -47,17 +47,28 @@
 #define JP_UNDER LS(JP_BSLH)
 
 &mt {flavor = "balanced"; quick-tap-ms = <0>;};
+&sl {release-after-ms = <0>;};
 
- / {
+/ {
     combos {
         compatible = "zmk,combos";
 
-        LClick {bindings = <&mkp LCLK>, <&to 0>; key-positions = <17 18>;};
-        RClick {bindings = <&mkp RCLK>, <&to 0>; key-positions = <18 19>;};
-        gotoScrollLayer {bindings = <&tog 6>; key-positions = <20 19>;};
+        LClick {bindings = <&macro_lclk>; key-positions = <17 18>;};
+        RClick {bindings = <&macro_rclk>; key-positions = <18 19>;};
+        gotoScrollLayer {bindings = <&sl 6>; key-positions = <20 19>;};
     };
 
     macros {
+        macro_lclk: macro_lclk {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&mkp LCLK>, <&kp K_CANCEL>;
+        };
+        macro_rclk: macro_rclk {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&mkp RCLK>, <&kp K_CANCEL>;
+        };
         to_layer_0: to_layer_0 {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
