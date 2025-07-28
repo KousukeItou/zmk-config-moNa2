@@ -69,8 +69,8 @@
 
         StickeyLayerToScroll {
             bindings = <&sl 4>;
-            key-positions = <20 19>;
-            timeout-ms = <0>;
+            key-positions = <19 20>;
+            timeout-ms = <50>;
         };
     };
 
@@ -125,7 +125,7 @@
     };
 };
 
-/* ルート外で既存ノードを上書きする */
+/* sticky-layer の自動解除時間 0ms */
 &sl {
     release-after-ms = <0>;
 };
