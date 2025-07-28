@@ -53,8 +53,6 @@
 &none   &none   &none   &none   &none   &none    &none  &none   &none   &none   &none   &none
 &none   &none   &none   &none   &none   &none    &none  &none                           &none
             >;
-
-            sensor-bindings = <&none>;
         };
 
         layer_2 {
@@ -64,8 +62,6 @@
 &none  &none  &none  &none  &none  &none    &none           &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LEFT_BRACE  &kp RIGHT_BRACE       &kp BACKSLASH
 &none  &none  &none  &none  &none  &none    &none           &none                                                                      &kp PIPE
             >;
-
-            sensor-bindings = <&none>;
         };
 
         MOUSE {
@@ -75,8 +71,6 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans    &trans    &trans    &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                &trans
             >;
-
-            sensor-bindings = <&none>;
         };
 
         SCROLL {
@@ -86,8 +80,6 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
             >;
-
-            sensor-bindings = <&none>;
         };
     };
 };
