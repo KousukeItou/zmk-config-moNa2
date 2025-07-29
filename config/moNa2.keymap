@@ -111,11 +111,11 @@
             tap-ms = <20>;
         };
 
-        /* “A”／“S” キーを長押しで切替 */
+        /* “A”／“S” 長押しでホスト切替 */
         mac_switch_ht: mac_switch_ht {
             compatible = "zmk,behavior-hold-tap";
             label = "MAC_SWITCH_HT";
-            bindings = <&mac_switch>, <&kp A>;
+            bindings = <&mac_switch &kp A>;
             flavor = "balanced";
             tapping-term-ms = <200>;
         };
@@ -123,7 +123,7 @@
         win_switch_ht: win_switch_ht {
             compatible = "zmk,behavior-hold-tap";
             label = "WIN_SWITCH_HT";
-            bindings = <&win_switch>, <&kp S>;
+            bindings = <&win_switch &kp S>;
             flavor = "balanced";
             tapping-term-ms = <200>;
         };
