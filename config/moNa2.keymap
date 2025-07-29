@@ -1,11 +1,12 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/pointing.h>
 
+/* Override default scroll step before pointing.h */
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 100
-#define MOUSE 5
-#define SCROLL 6
+#include <dt-bindings/zmk/pointing.h>
+#include <dt-bindings/zmk/mouse.h>
+
 #define WIN_BASE 0
 #define MAC_BASE 7
 
@@ -99,7 +100,7 @@
         lt_to_layer_0: lt_to_layer_0 {
             compatible = "zmk,behavior-hold-tap";
             label = "LAYER_TAP_TO_0";
-            bindings = <&mo>, <&to_layer_0>;
+            bindings = <&mo 0>, <&to_layer_0 0>;
             #binding-cells = <2>;
             tapping-term-ms = <200>;
         };
@@ -115,7 +116,7 @@
         mac_switch_ht: mac_switch_ht {
             compatible = "zmk,behavior-hold-tap";
             label = "MAC_SWITCH_HT";
-            bindings = <&mac_switch &kp A>;
+            bindings = <&mac_switch>, <&kp A>;
             flavor = "balanced";
             tapping-term-ms = <200>;
         };
@@ -123,7 +124,7 @@
         win_switch_ht: win_switch_ht {
             compatible = "zmk,behavior-hold-tap";
             label = "WIN_SWITCH_HT";
-            bindings = <&win_switch &kp S>;
+            bindings = <&win_switch>, <&kp S>;
             flavor = "balanced";
             tapping-term-ms = <200>;
         };
