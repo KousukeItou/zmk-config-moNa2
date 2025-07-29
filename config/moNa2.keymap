@@ -6,6 +6,9 @@
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 100
 #define MOUSE 5
 #define SCROLL 6
+#define WIN_BASE 0       /* default_layer (=Windows) */
+#define MAC_BASE 7       /* mac_default (=macOS) */
+
 #define JP_ZKHK GRAVE
 #define JP_MINUS MINUS
 #define JP_CARET EQUAL
@@ -46,16 +49,16 @@
 #define JP_QMARK LS(JP_SLASH)
 #define JP_UNDER LS(JP_BSLH)
 
-&mt {flavor = "balanced"; quick-tap-ms = <0>;};
-&sl {release-after-ms = <0>;};
+&mt { flavor = "balanced"; quick-tap-ms = <0>; };
+&sl { release-after-ms = <0>; };
 
 / {
     combos {
         compatible = "zmk,combos";
 
-        LClick {bindings = <&macro_lclk>; key-positions = <17 18>;};
-        RClick {bindings = <&macro_rclk>; key-positions = <18 19>;};
-        gotoScrollLayer {bindings = <&sl 6>; key-positions = <20 19>;};
+        LClick { bindings = <&macro_lclk>; key-positions = <17 18>; };
+        RClick { bindings = <&macro_rclk>; key-positions = <18 19>; };
+        gotoScrollLayer { bindings = <&sl 6>; key-positions = <20 19>; };
     };
 
     macros {
@@ -64,16 +67,31 @@
             #binding-cells = <0>;
             bindings = <&macro_press &mkp LCLK>, <&macro_tap &kp K_CANCEL>, <&macro_pause_for_release>, <&macro_release &mkp LCLK>;
         };
+
         macro_rclk: macro_rclk {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&macro_press &mkp RCLK>, <&macro_tap &kp K_CANCEL>, <&macro_pause_for_release>, <&macro_release &mkp RCLK>;
         };
+
         to_layer_0: to_layer_0 {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
             bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
             label = "TO_LAYER_0";
+        };
+
+        /* 追加: ホスト／レイヤー切替マクロ */
+        win_switch: win_switch {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 0>, <&to WIN_BASE>;
+        };
+
+        mac_switch: mac_switch {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 1>, <&to MAC_BASE>;
         };
     };
 
@@ -92,17 +110,35 @@
             bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
             tap-ms = <20>;
         };
+
+        /* 追加: “A”／“S” キーを保持で切替、タップで通常打鍵 */
+        mac_switch_ht: mac_switch_ht {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MAC_SWITCH_HT";
+            bindings = <&mac_switch &kp A>;
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+        };
+
+        win_switch_ht: win_switch_ht {
+            compatible = "zmk,behavior-hold-tap";
+            label = "WIN_SWITCH_HT";
+            bindings = <&win_switch &kp S>;
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+        };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
+        /* ---------- Windows 基本レイヤ（index 0） ---------- */
         default_layer {
             bindings = <
 &kp Q       &kp W         &kp E          &kp R               &kp T                                                 &kp Y          &kp U  &kp I         &kp O       &kp P
-&kp A       &kp S         &kp D          &kp F               &kp G                                     &none       &kp H          &kp J  &kp K         &kp L       &kp JP_MINUS
+&mac_switch_ht &win_switch_ht &kp D          &kp F               &kp G                                     &none       &kp H          &kp J  &kp K         &kp L       &kp JP_MINUS
 &kp Z       &kp X         &kp C          &kp V               &kp B                 &none               &kp DELETE  &kp N          &kp M  &kp JP_COMMA  &kp JP_DOT  &kp JP_AT
-&kp ESCAPE  &kp LEFT_WIN  &mt LCTRL TAB  &lt 1 INT_MUHENKAN  &mt LEFT_SHIFT SPACE  &lt 2 INT_HENKAN    &kp ENTER   &kp BACKSPACE                                   &none
+&kp ESCAPE  &kp LEFT_WIN  &mt LCTRL TAB  &lt 1 INT_MUHENKAN   &mt LEFT_SHIFT SPACE  &lt 2 INT_HENKAN    &kp ENTER   &kp BACKSPACE                                   &none
             >;
 
             sensor-bindings =
@@ -110,6 +146,7 @@
                 <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
 
+        /* ---------- 既存レイヤ（index 1〜6）変更なし ---------- */
         layer_1 {
             bindings = <
 &kp N1  &kp N2  &kp N3  &kp N4  &kp N5                    &kp N6        &kp N7      &kp N8       &kp N9        &kp N0
@@ -117,7 +154,6 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &kp JP_CARET  &kp JP_YEN  &kp JP_SEMI  &kp JP_COLON  &kp JP_UNDER
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                               &trans
             >;
-
             sensor-bindings = <&scroll_up_down>;
         };
 
@@ -128,7 +164,6 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &kp LEFT  &kp DOWN  &kp RIGHT  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                 &trans
             >;
-
             sensor-bindings = <&scroll_up_down>;
         };
 
@@ -139,7 +174,6 @@
 &kp LEFT_SHIFT  &kp LG(LS(LEFT_ARROW))  &trans          &kp LG(LS(RIGHT_ARROW))  &trans   &trans    &trans  &trans  &trans  &trans  &trans  &trans
 &trans          &trans                  &trans          &trans                   &trans   &trans    &trans  &trans                          &trans
             >;
-
             sensor-bindings = <&scroll_up_down>;
         };
 
@@ -150,7 +184,6 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
 &trans  &trans  &trans  &trans  &trans  &trans    &trans       &trans                                                  &bt BT_CLR_ALL
             >;
-
             sensor-bindings = <&scroll_up_down>;
         };
 
@@ -161,7 +194,6 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
             >;
-
             sensor-bindings = <&scroll_up_down>;
         };
 
@@ -172,8 +204,20 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
             >;
-
             sensor-bindings = <&scroll_up_down>;
+        };
+
+        /* ---------- macOS 基本レイヤ（index 7） ---------- */
+        mac_default {
+            bindings = <
+&kp Q       &kp W         &kp E          &kp R               &kp T                                                 &kp Y          &kp U  &kp I         &kp O       &kp P
+&mac_switch_ht &win_switch_ht &kp D          &kp F               &kp G                                     &none       &kp H          &kp J  &kp K         &kp L       &kp JP_MINUS
+&kp Z       &kp X         &kp C          &kp V               &kp B                 &none               &kp DELETE  &kp N          &kp M  &kp JP_COMMA  &kp JP_DOT  &kp JP_AT
+&kp ESCAPE  &kp LEFT_CMD  &mt LCTRL TAB  &lt 1 INT_MUHENKAN   &mt LEFT_SHIFT SPACE  &lt 2 INT_HENKAN    &kp ENTER   &kp BACKSPACE                                   &none
+            >;
+            sensor-bindings =
+                <&scroll_up_down>,
+                <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
     };
 };
