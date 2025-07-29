@@ -1,19 +1,11 @@
-/* ───── 事前定義 ───── */
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 100       /* ← pointing.h より前に置く */
-
 #include <behaviors.dtsi>
-#include <behaviors/mouse_keys.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-/* レイヤー番号 */
-#define WIN_BASE        0
-#define MAC_BASE        7
-#define MOUSE_LAYER_NUM 5
-#define SCRL_LAYER_NUM  6
-
-/* 日本語配列用キーコード（既存と同じ） */
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 100
+#define MOUSE 5
+#define SCROLL 6
 #define JP_ZKHK GRAVE
 #define JP_MINUS MINUS
 #define JP_CARET EQUAL
@@ -31,226 +23,157 @@
 #define JP_MHEN INT5
 #define JP_HENK INT4
 #define JP_KANA INT2
-#define JP_EXCL  LS(N1)
-#define JP_DQT   LS(N2)
-#define JP_HASH  LS(N3)
-#define JP_DLLR  LS(N4)
+#define JP_EXCL LS(N1)
+#define JP_DQT LS(N2)
+#define JP_HASH LS(N3)
+#define JP_DLLR LS(N4)
 #define JP_PRCNT LS(N5)
-#define JP_AMPS  LS(N6)
-#define JP_SQT   LS(N7)
-#define JP_LPAR  LS(N8)
-#define JP_RPAR  LS(N9)
+#define JP_AMPS LS(N6)
+#define JP_SQT LS(N7)
+#define JP_LPAR LS(N8)
+#define JP_RPAR LS(N9)
 #define JP_EQUAL LS(JP_MINUS)
 #define JP_TILDE LS(JP_CARET)
-#define JP_PIPE  LS(JP_YEN)
+#define JP_PIPE LS(JP_YEN)
 #define JP_GRAVE LS(JP_AT)
-#define JP_LBRC  LS(JP_LBKT)
-#define JP_CAPS  LS(JP_EISU)
-#define JP_PLUS  LS(JP_SEMI)
+#define JP_LBRC LS(JP_LBKT)
+#define JP_CAPS LS(JP_EISU)
+#define JP_PLUS LS(JP_SEMI)
 #define JP_ASTRK LS(JP_COLON)
-#define JP_RBRC  LS(JP_RBKT)
-#define JP_LT    LS(JP_COMMA)
-#define JP_RT    LS(JP_DOT)
+#define JP_RBRC LS(JP_RBKT)
+#define JP_LT LS(JP_COMMA)
+#define JP_RT LS(JP_DOT)
 #define JP_QMARK LS(JP_SLASH)
 #define JP_UNDER LS(JP_BSLH)
 
-/* Sensor & sticky‑layer動作用パラメータ */
-&mt { flavor = "balanced"; quick-tap-ms = <0>; };
-&sl { release-after-ms = <300>; };      /* 0 だと即離脱するため 300 ms に変更 */
+&mt {flavor = "balanced"; quick-tap-ms = <0>;};
+&sl {release-after-ms = <0>;};
 
-/* ─────────────────────────────────── */
-/
 / {
-    /* ---------- コンボ ---------- */
     combos {
         compatible = "zmk,combos";
 
-        lclick_combo: lclick_combo {
-            bindings = <&macro_lclk>;
-            key-positions = <17 18>;
-        };
-
-        rclick_combo: rclick_combo {
-            bindings = <&macro_rclk>;
-            key-positions = <18 19>;
-        };
-
-        goto_scroll_layer: goto_scroll_layer {
-            bindings = <&sl SCRL_LAYER_NUM>;
-            key-positions = <20 19>;
-        };
+        LClick {bindings = <&macro_lclk>; key-positions = <17 18>;};
+        RClick {bindings = <&macro_rclk>; key-positions = <18 19>;};
+        gotoScrollLayer {bindings = <&sl 6>; key-positions = <20 19>;};
     };
 
-    /* ---------- マクロ ---------- */
     macros {
         macro_lclk: macro_lclk {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_press &mkp LCLK>,
-                       <&macro_tap  &kp K_CANCEL>,
-                       <&macro_pause_for_release>,
-                       <&macro_release &mkp LCLK>;
+            bindings = <&macro_press &mkp LCLK>, <&macro_tap &kp K_CANCEL>, <&macro_pause_for_release>, <&macro_release &mkp LCLK>;
         };
-
         macro_rclk: macro_rclk {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_press &mkp RCLK>,
-                       <&macro_tap  &kp K_CANCEL>,
-                       <&macro_pause_for_release>,
-                       <&macro_release &mkp RCLK>;
+            bindings = <&macro_press &mkp RCLK>, <&macro_tap &kp K_CANCEL>, <&macro_pause_for_release>, <&macro_release &mkp RCLK>;
         };
-
-        /* キー単体タップ専用マクロ（Hold‑Tap 用） */
-        tap_a: tap_a {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp A>;
-        };
-
-        tap_s: tap_s {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp S>;
-        };
-
-        /* ホスト＋レイヤー切替 */
-        win_switch: win_switch {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&bt BT_SEL 0>, <&to WIN_BASE>;
-        };
-
-        mac_switch: mac_switch {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&bt BT_SEL 1>, <&to MAC_BASE>;
+        to_layer_0: to_layer_0 {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
+            label = "TO_LAYER_0";
         };
     };
 
-    /* ---------- ビヘイビア ---------- */
     behaviors {
-        /* マウスホイール用センサー回転 */
-        scroll_ud: scroll_ud {
+        lt_to_layer_0: lt_to_layer_0 {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LAYER_TAP_TO_0";
+            bindings = <&mo>, <&to_layer_0>;
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+        };
+
+        scroll_up_down: behavior_sensor_rotate_mouse_wheel_up_down {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
             bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
             tap-ms = <20>;
         };
-
-        /* “A” 長押し → macOS／タップ → 'A' */
-        mac_switch_ht: mac_switch_ht {
-            compatible = "zmk,behavior-hold-tap";
-            flavor = "balanced";
-            tapping-term-ms = <200>;
-            bindings = <&mac_switch &tap_a>;
-        };
-
-        /* “S” 長押し → Windows／タップ → 'S' */
-        win_switch_ht: win_switch_ht {
-            compatible = "zmk,behavior-hold-tap";
-            flavor = "balanced";
-            tapping-term-ms = <200>;
-            bindings = <&win_switch &tap_s>;
-        };
     };
 
-    /* ---------- キーマップ ---------- */
     keymap {
         compatible = "zmk,keymap";
 
-        /* ----- Layer 0 : Windows 基本 ----- */
         default_layer {
             bindings = <
-&kp Q              &kp W          &kp E          &kp R               &kp T                                                &kp Y          &kp U  &kp I         &kp O        &kp P
-&mac_switch_ht     &win_switch_ht &kp D          &kp F               &kp G                                   &none        &kp H          &kp J  &kp K         &kp L        &kp JP_MINUS
-&kp Z              &kp X          &kp C          &kp V               &kp B                &none            &kp DELETE   &kp N          &kp M  &kp JP_COMMA   &kp JP_DOT   &kp JP_AT
-&kp ESCAPE         &kp LEFT_WIN   &mt LCTRL TAB  &lt 1 INT_MUHENKAN    &mt LEFT_SHIFT SPACE &lt 2 INT_HENKAN  &kp ENTER    &kp BACKSPACE                                     &none
+&kp Q       &kp W         &kp E          &kp R               &kp T                                                 &kp Y          &kp U  &kp I         &kp O       &kp P
+&kp A       &kp S         &kp D          &kp F               &kp G                                     &none       &kp H          &kp J  &kp K         &kp L       &kp JP_MINUS
+&kp Z       &kp X         &kp C          &kp V               &kp B                 &none               &kp DELETE  &kp N          &kp M  &kp JP_COMMA  &kp JP_DOT  &kp JP_AT
+&kp ESCAPE  &kp LEFT_WIN  &mt LCTRL TAB  &lt 1 INT_MUHENKAN  &mt LEFT_SHIFT SPACE  &lt 2 INT_HENKAN    &kp ENTER   &kp BACKSPACE                                   &none
             >;
 
             sensor-bindings =
-                <&scroll_ud>,
+                <&scroll_up_down>,
                 <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
 
-        /* ----- Layer 1 : 数字／記号 ----- */
         layer_1 {
             bindings = <
-&kp N1  &kp N2  &kp N3  &kp N4  &kp N5                         &kp N6        &kp N7      &kp N8       &kp N9        &kp N0
-&trans  &trans  &trans  &trans  &trans                &trans   &trans        &trans      &kp JP_LBKT  &kp JP_RBKT   &kp JP_SLASH
-&trans  &trans  &trans  &trans  &trans  &trans        &trans   &kp JP_CARET  &kp JP_YEN  &kp JP_SEMI  &kp JP_COLON  &kp JP_UNDER
-&trans  &trans  &trans  &trans  &trans  &trans        &trans   &trans                                                &trans
+&kp N1  &kp N2  &kp N3  &kp N4  &kp N5                    &kp N6        &kp N7      &kp N8       &kp N9        &kp N0
+&trans  &trans  &trans  &trans  &trans            &trans  &trans        &trans      &kp JP_LBKT  &kp JP_RBKT   &kp JP_SLASH
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &kp JP_CARET  &kp JP_YEN  &kp JP_SEMI  &kp JP_COLON  &kp JP_UNDER
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                               &trans
             >;
-            sensor-bindings = <&scroll_ud>;
+
+            sensor-bindings = <&scroll_up_down>;
         };
 
-        /* ----- Layer 2 : ファンクション／矢印 ----- */
         layer_2 {
             bindings = <
-&kp F1  &kp F2  &kp F3  &kp F4  &kp F5                         &kp F6  &kp F7    &kp F8    &kp F9     &kp F10
-&trans  &trans  &trans  &trans  &trans                &trans   &trans  &trans    &kp UP    &trans     &trans
-&trans  &trans  &trans  &trans  &trans  &trans        &trans   &trans  &kp LEFT  &kp DOWN  &kp RIGHT  &trans
-&trans  &trans  &trans  &trans  &trans  &trans        &trans   &trans                                      &trans
+&kp F1  &kp F2  &kp F3  &kp F4  &kp F5                    &kp F6  &kp F7    &kp F8    &kp F9     &kp F10
+&trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans    &kp UP    &trans     &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &kp LEFT  &kp DOWN  &kp RIGHT  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                 &trans
             >;
-            sensor-bindings = <&scroll_ud>;
+
+            sensor-bindings = <&scroll_up_down>;
         };
 
-        /* ----- Layer 3 : ナビゲーション ----- */
         layer_3 {
             bindings = <
 &kp ESCAPE      &kp LC(LS(TAB))         &kp UP_ARROW    &kp LC(TAB)              &trans                     &trans  &trans  &trans  &trans  &trans
 &kp HOME        &kp LEFT_ARROW          &kp DOWN_ARROW  &kp RIGHT_ARROW          &kp END            &trans  &trans  &trans  &trans  &trans  &trans
 &kp LEFT_SHIFT  &kp LG(LS(LEFT_ARROW))  &trans          &kp LG(LS(RIGHT_ARROW))  &trans   &trans    &trans  &trans  &trans  &trans  &trans  &trans
-&trans          &trans                  &trans          &trans                   &trans   &trans    &trans  &trans                           &trans
+&trans          &trans                  &trans          &trans                   &trans   &trans    &trans  &trans                          &trans
             >;
-            sensor-bindings = <&scroll_ud>;
+
+            sensor-bindings = <&scroll_up_down>;
         };
 
-        /* ----- Layer 4 : Bluetooth 管理 ----- */
         layer_4 {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                       &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
-&trans  &trans  &trans  &trans  &trans              &trans   &trans        &trans        &trans        &trans        &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &bootloader &trans      &trans        &trans        &trans        &bt BT_CLR
-&trans  &trans  &trans  &trans  &trans  &trans      &trans     &trans                                                    &bt BT_CLR_ALL
+&trans  &trans  &trans  &trans  &trans                         &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
+&trans  &trans  &trans  &trans  &trans            &trans       &trans        &trans        &trans        &trans        &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
+&trans  &trans  &trans  &trans  &trans  &trans    &trans       &trans                                                  &bt BT_CLR_ALL
             >;
-            sensor-bindings = <&scroll_ud>;
+
+            sensor-bindings = <&scroll_up_down>;
         };
 
-        /* ----- Layer 5 : マウス ----- */
-        mouse_layer {
+        MOUSE {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                     &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans             &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans     &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans     &trans  &trans                            &trans
+&trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
             >;
-            sensor-bindings = <&scroll_ud>;
+
+            sensor-bindings = <&scroll_up_down>;
         };
 
-        /* ----- Layer 6 : スクロール ----- */
-        scroll_layer {
+        SCROLL {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                     &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans             &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans     &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans     &trans  &trans                            &trans
-            >;
-            sensor-bindings = <&scroll_ud>;
-        };
-
-        /* ----- Layer 7 : macOS 基本 ----- */
-        mac_default {
-            bindings = <
-&kp Q              &kp W          &kp E          &kp R               &kp T                                                &kp Y          &kp U  &kp I         &kp O        &kp P
-&mac_switch_ht     &win_switch_ht &kp D          &kp F               &kp G                                   &none        &kp H          &kp J  &kp K         &kp L        &kp JP_MINUS
-&kp Z              &kp X          &kp C          &kp V               &kp B                &none            &kp DELETE   &kp N          &kp M  &kp JP_COMMA   &kp JP_DOT   &kp JP_AT
-&kp ESCAPE         &kp LEFT_WIN   &mt LCTRL TAB  &lt 1 INT_MUHENKAN    &mt LEFT_SHIFT SPACE &lt 2 INT_HENKAN  &kp ENTER    &kp BACKSPACE                                     &none
+&trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
             >;
 
-            sensor-bindings =
-                <&scroll_ud>,
-                <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+            sensor-bindings = <&scroll_up_down>;
         };
     };
 };
