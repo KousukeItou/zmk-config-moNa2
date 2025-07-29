@@ -6,8 +6,8 @@
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 100
 #define MOUSE 5
 #define SCROLL 6
-#define WIN_BASE 0       /* default_layer (=Windows) */
-#define MAC_BASE 7       /* mac_default (=macOS) */
+#define WIN_BASE 0
+#define MAC_BASE 7
 
 #define JP_ZKHK GRAVE
 #define JP_MINUS MINUS
@@ -81,7 +81,7 @@
             label = "TO_LAYER_0";
         };
 
-        /* 追加: ホスト／レイヤー切替マクロ */
+        /* ホスト＋レイヤー切替マクロ */
         win_switch: win_switch {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -111,11 +111,11 @@
             tap-ms = <20>;
         };
 
-        /* 追加: “A”／“S” キーを保持で切替、タップで通常打鍵 */
+        /* “A”／“S” キーを長押しで切替 */
         mac_switch_ht: mac_switch_ht {
             compatible = "zmk,behavior-hold-tap";
             label = "MAC_SWITCH_HT";
-            bindings = <&mac_switch &kp A>;
+            bindings = <&mac_switch>, <&kp A>;
             flavor = "balanced";
             tapping-term-ms = <200>;
         };
@@ -123,7 +123,7 @@
         win_switch_ht: win_switch_ht {
             compatible = "zmk,behavior-hold-tap";
             label = "WIN_SWITCH_HT";
-            bindings = <&win_switch &kp S>;
+            bindings = <&win_switch>, <&kp S>;
             flavor = "balanced";
             tapping-term-ms = <200>;
         };
@@ -132,13 +132,13 @@
     keymap {
         compatible = "zmk,keymap";
 
-        /* ---------- Windows 基本レイヤ（index 0） ---------- */
+        /* ---------- Windows 基本レイヤ (0) ---------- */
         default_layer {
             bindings = <
-&kp Q       &kp W         &kp E          &kp R               &kp T                                                 &kp Y          &kp U  &kp I         &kp O       &kp P
-&mac_switch_ht &win_switch_ht &kp D          &kp F               &kp G                                     &none       &kp H          &kp J  &kp K         &kp L       &kp JP_MINUS
-&kp Z       &kp X         &kp C          &kp V               &kp B                 &none               &kp DELETE  &kp N          &kp M  &kp JP_COMMA  &kp JP_DOT  &kp JP_AT
-&kp ESCAPE  &kp LEFT_WIN  &mt LCTRL TAB  &lt 1 INT_MUHENKAN   &mt LEFT_SHIFT SPACE  &lt 2 INT_HENKAN    &kp ENTER   &kp BACKSPACE                                   &none
+&kp Q              &kp W          &kp E          &kp R               &kp T                                                &kp Y          &kp U  &kp I         &kp O       &kp P
+&mac_switch_ht     &win_switch_ht &kp D          &kp F               &kp G                                    &none       &kp H          &kp J  &kp K         &kp L       &kp JP_MINUS
+&kp Z              &kp X          &kp C          &kp V               &kp B                &none               &kp DELETE  &kp N          &kp M  &kp JP_COMMA  &kp JP_DOT  &kp JP_AT
+&kp ESCAPE         &kp LEFT_WIN   &mt LCTRL TAB  &lt 1 INT_MUHENKAN    &mt LEFT_SHIFT SPACE &lt 2 INT_HENKAN    &kp ENTER   &kp BACKSPACE                                   &none
             >;
 
             sensor-bindings =
@@ -146,23 +146,23 @@
                 <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
 
-        /* ---------- 既存レイヤ（index 1〜6）変更なし ---------- */
+        /* ---------- 既存レイヤ (1〜6) 変更なし ---------- */
         layer_1 {
             bindings = <
-&kp N1  &kp N2  &kp N3  &kp N4  &kp N5                    &kp N6        &kp N7      &kp N8       &kp N9        &kp N0
-&trans  &trans  &trans  &trans  &trans            &trans  &trans        &trans      &kp JP_LBKT  &kp JP_RBKT   &kp JP_SLASH
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &kp JP_CARET  &kp JP_YEN  &kp JP_SEMI  &kp JP_COLON  &kp JP_UNDER
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                               &trans
+&kp N1  &kp N2  &kp N3  &kp N4  &kp N5                        &kp N6        &kp N7      &kp N8       &kp N9        &kp N0
+&trans  &trans  &trans  &trans  &trans               &trans  &trans        &trans      &kp JP_LBKT  &kp JP_RBKT   &kp JP_SLASH
+&trans  &trans  &trans  &trans  &trans  &trans       &trans  &kp JP_CARET  &kp JP_YEN  &kp JP_SEMI  &kp JP_COLON  &kp JP_UNDER
+&trans  &trans  &trans  &trans  &trans  &trans       &trans  &trans                                               &trans
             >;
             sensor-bindings = <&scroll_up_down>;
         };
 
         layer_2 {
             bindings = <
-&kp F1  &kp F2  &kp F3  &kp F4  &kp F5                    &kp F6  &kp F7    &kp F8    &kp F9     &kp F10
-&trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans    &kp UP    &trans     &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &kp LEFT  &kp DOWN  &kp RIGHT  &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                 &trans
+&kp F1  &kp F2  &kp F3  &kp F4  &kp F5                        &kp F6  &kp F7    &kp F8    &kp F9     &kp F10
+&trans  &trans  &trans  &trans  &trans               &trans  &trans  &trans    &kp UP    &trans     &trans
+&trans  &trans  &trans  &trans  &trans  &trans       &trans  &trans  &kp LEFT  &kp DOWN  &kp RIGHT  &trans
+&trans  &trans  &trans  &trans  &trans  &trans       &trans  &trans                                 &trans
             >;
             sensor-bindings = <&scroll_up_down>;
         };
@@ -179,10 +179,10 @@
 
         layer_4 {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                         &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
-&trans  &trans  &trans  &trans  &trans            &trans       &trans        &trans        &trans        &trans        &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
-&trans  &trans  &trans  &trans  &trans  &trans    &trans       &trans                                                  &bt BT_CLR_ALL
+&trans  &trans  &trans  &trans  &trans                        &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
+&trans  &trans  &trans  &trans  &trans               &trans   &trans        &trans        &trans        &trans        &trans
+&trans  &trans  &trans  &trans  &trans  &trans       &bootloader  &trans   &trans        &trans        &trans        &bt BT_CLR
+&trans  &trans  &trans  &trans  &trans  &trans       &trans       &trans                                                  &bt BT_CLR_ALL
             >;
             sensor-bindings = <&scroll_up_down>;
         };
@@ -207,14 +207,15 @@
             sensor-bindings = <&scroll_up_down>;
         };
 
-        /* ---------- macOS 基本レイヤ（index 7） ---------- */
+        /* ---------- macOS 基本レイヤ (7) ---------- */
         mac_default {
             bindings = <
-&kp Q       &kp W         &kp E          &kp R               &kp T                                                 &kp Y          &kp U  &kp I         &kp O       &kp P
-&mac_switch_ht &win_switch_ht &kp D          &kp F               &kp G                                     &none       &kp H          &kp J  &kp K         &kp L       &kp JP_MINUS
-&kp Z       &kp X         &kp C          &kp V               &kp B                 &none               &kp DELETE  &kp N          &kp M  &kp JP_COMMA  &kp JP_DOT  &kp JP_AT
-&kp ESCAPE  &kp LEFT_CMD  &mt LCTRL TAB  &lt 1 INT_MUHENKAN   &mt LEFT_SHIFT SPACE  &lt 2 INT_HENKAN    &kp ENTER   &kp BACKSPACE                                   &none
+&kp Q              &kp W          &kp E          &kp R               &kp T                                                &kp Y          &kp U  &kp I         &kp O       &kp P
+&mac_switch_ht     &win_switch_ht &kp D          &kp F               &kp G                                    &none       &kp H          &kp J  &kp K         &kp L       &kp JP_MINUS
+&kp Z              &kp X          &kp C          &kp V               &kp B                &none               &kp DELETE  &kp N          &kp M  &kp JP_COMMA  &kp JP_DOT  &kp JP_AT
+&kp ESCAPE         &kp LEFT_WIN   &mt LCTRL TAB  &lt 1 INT_MUHENKAN    &mt LEFT_SHIFT SPACE &lt 2 INT_HENKAN    &kp ENTER   &kp BACKSPACE                                   &none
             >;
+
             sensor-bindings =
                 <&scroll_up_down>,
                 <&inc_dec_kp C_VOL_DN C_VOL_UP>;
